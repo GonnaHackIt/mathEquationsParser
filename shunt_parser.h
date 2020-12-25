@@ -16,8 +16,8 @@ int calc(char symbol, string number1, string number2) {
 		case '+': 
 			result = num1 + num2; 
 		break;
-		case '-': 
-			result = num1 - num2; 
+		case '-':
+			result = num2 - num1;
 		break;
 		case '*': 
 			result =  num1 * num2;
@@ -29,21 +29,26 @@ int calc(char symbol, string number1, string number2) {
 	return result;
 }
 
-string initNewExpr(string& expr) {
+string initNewExpr(string& expr, string& result) {
 	string temp;
 
 	bool bFlag = false;
+	bool bFlagAdded = false;
+
 	for (int i = 0; i < expr.size(); i++) {
 		if (expr[i] == '$') {
 			if (bFlag) {
 				bFlag = false;
 				temp += '&';
 			}
+			temp += !bFlagAdded ? result + '&': "";
+			bFlagAdded = true;
 			continue;
 		}
 		temp += expr[i];
 		bFlag = true;
 	}
+
 	return temp;
 }
 
@@ -89,6 +94,7 @@ int getResult(string expr) {
 
 int compute(string expr) {
 
+
 	for (int i = 0; i < expr.size(); i++) {
 		if (isSymbol(expr[i])) {
 			string nums[2];
@@ -96,7 +102,7 @@ int compute(string expr) {
 			string result = to_string(calc(expr[i], nums[0], nums[1]));
 
 			expr[i] = '$';
-			expr = result + '&' + initNewExpr(expr);
+			expr = initNewExpr(expr, result);
 			i = 0;
 		}
 	}

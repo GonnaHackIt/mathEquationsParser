@@ -14,6 +14,7 @@ int main()
     string postfix;
 
     postfix = shunt_yard(expr);
+    
 
     int result;
     result = parseShunt(postfix);
